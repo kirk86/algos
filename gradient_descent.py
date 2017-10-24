@@ -49,15 +49,15 @@ class GradientDescent(Optimizer):
         self.etaminus = etaminus
         self.lastgradient = lastgradient
 
-    def init(self, values):
-        """ call this to initialize data structures to use *after* algorithm
-        has been selected
-        :arg values: the list (or array) of parameters to perform gradient
-         descent on
-        (will be copied, original not modified)
-        """
-        assert isinstance(values, ndarray)
-        self.values = values.copy()
+    # def init(self, values):
+        # """ call this to initialize data structures to use *after* algorithm
+        # has been selected
+        # :arg values: the list (or array) of parameters to perform gradient
+        #  descent on
+        # (will be copied, original not modified)
+        # """
+        # assert isinstance(values, ndarray)
+        # self.values = values.copy()
         if self.rprop:
             self.lastgradient = zeros(len(values), dtype='float64')
             self.rprop_theta = self.lastgradient + self.deltanull
@@ -66,11 +66,12 @@ class GradientDescent(Optimizer):
             self.lastgradient = None
             self.momentumvector = zeros(len(values))
 
-    def __call__(self, gradient, error=None):
+
+    @interfaces.legacy_get_updates_support
+    def get_updates(self, params, constraints, loss):
         """ calculates parameter change based on given gradient and returns
             updated parameters
             check if gradient has correct dimensionality, then make array """
-        assert len(gradient) == len(self.values)
         gradient_arr = asarray(gradient)
 
         if self.rprop:
